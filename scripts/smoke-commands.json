@@ -1,0 +1,15 @@
+[
+  {
+    "label": "gravion-trainner --help",
+    "cwd": ".",
+    "cmd": [
+      "python",
+      "-m",
+      "gravion_trainner.cli",
+      "--help"
+    ],
+    "env": {
+      "PYTHONPATH": "src"
+    }
+  }
+]

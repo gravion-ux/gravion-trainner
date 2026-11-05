@@ -1,0 +1,25 @@
+# Normalise text files to LF in the repository and in every checkout.
+#
+# scripts/test-all.sh must keep LF endings: a CRLF checkout breaks the shell
+# script on Linux and macOS runners. Setting eol=lf here overrides a
+# contributor's local core.autocrlf=true.
+* text=auto eol=lf
+
+# Never line-ending translate binary assets.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.pem binary
+*.key binary
