@@ -1,5 +1,6 @@
 import json
 import os
+import socket
 import sys
 import tempfile
 import unittest
@@ -142,4 +143,74 @@ class TrainnerValidationTests(unittest.TestCase):
                 load_dataset(path)
 
 
+class MalformedEndpointTests(unittest.TestCase):
+    """A malformed HTTP response must surface as a clean RuntimeError, not a raw traceback."""
+
+    @staticmethod
+    def _serve_once(payload):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(("127.0.0.1", 0))
+        server.listen(1)
+        port = server.getsockname()[1]
+
+        def run():
+            try:
+                conn, _ = server.accept()
+            except OSError:
+                return
+            try:
+                conn.settimeout(2)
+                try:
+                    conn.recv(65536)
+                except OSError:
+                    pass
+                conn.sendall(payload)
+            except OSError:
+                pass
+            finally:
+                conn.close()
+
+        thread = Thread(target=run, daemon=True)
+        thread.start()
+        return server, port, thread
+
+    def test_malformed_status_line_raises_runtime_error(self):
+        server, port, thread = self._serve_once(b"NOT-HTTP GARBAGE\r\n\r\n")
+        try:
+            client = OpenAICompatibleClient(base_url=f"http://127.0.0.1:{port}/v1", model="test-model", timeout=5)
+            with self.assertRaisesRegex(RuntimeError, "Model endpoint request failed"):
+                client.complete("hello")
+        finally:
+            server.close()
+            thread.join(timeout=2)
+
+    def test_cli_reports_a_malformed_endpoint_without_a_traceback(self):
+        server, port, thread = self._serve_once(b"NOT-HTTP GARBAGE\r\n\r\n")
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                dataset = Path(tmp) / "d.jsonl"
+                dataset.write_text(json.dumps({"id": "x", "prompt": "p", "expected_contains": ["ok"]}) + "\n")
+                output = Path(tmp) / "report.json"
+                environ = {
+                    "GRAVION_BASE_URL": f"http://127.0.0.1:{port}/v1",
+                    "GRAVION_MODEL": "mock-model",
+                    "GRAVION_API_KEY": "",
+                }
+                argv = ["gravion-trainner", "evaluate", "--dataset", str(dataset), "--output", str(output)]
+                with patch.dict(os.environ, environ, clear=False), patch("sys.argv", argv):
+                    self.assertEqual(trainner_main(), 2)
+        finally:
+            server.close()
+            thread.join(timeout=2)
+
+    def test_loads_dataset_with_utf8_bom(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "d.jsonl"
+            row = json.dumps({"id": "a", "prompt": "p", "expected_contains": ["ok"]}) + "\n"
+            path.write_bytes(b"\xef\xbb\xbf" + row.encode("utf-8"))
+            self.assertEqual(load_dataset(path)[0].case_id, "a")
+
+
 if __name__ == "__main__": unittest.main()
+

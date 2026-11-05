@@ -1,5 +1,6 @@
 from __future__ import annotations
 import argparse
+import http.client
 import json
 from pathlib import Path
 import sys
@@ -20,7 +21,7 @@ def main() -> int:
         print(f"Evaluated {report['case_count']} case(s); average heuristic coverage: {report['average_score']:.1%}")
         print(f"Report: {output}")
         return 0
-    except (OSError, ValueError, RuntimeError) as exc:
+    except (OSError, ValueError, RuntimeError, http.client.HTTPException) as exc:
         print(f"gravion-trainner: {exc}", file=sys.stderr); return 2
 
 if __name__ == "__main__": raise SystemExit(main())

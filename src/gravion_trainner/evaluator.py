@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import http.client
 import ipaddress
 import json
 import os
@@ -28,7 +29,7 @@ def load_dataset(path: str | Path) -> list[EvalCase]:
     try:
         if dataset_path.stat().st_size > MAX_DATASET_BYTES:
             raise ValueError(f"Dataset exceeds the {MAX_DATASET_BYTES}-byte limit")
-        lines = dataset_path.read_text(encoding="utf-8").splitlines()
+        lines = dataset_path.read_text(encoding="utf-8-sig").splitlines()
     except OSError as exc:
         raise ValueError(f"Cannot read dataset: {exc}") from exc
     except UnicodeError as exc:
@@ -147,7 +148,8 @@ class OpenAICompatibleClient:
             body = json.loads(data.decode("utf-8"))
         except urllib.error.HTTPError as exc:
             raise RuntimeError(f"Model endpoint returned HTTP {exc.code}") from exc
-        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException,
+                json.JSONDecodeError, UnicodeDecodeError) as exc:
             raise RuntimeError(f"Model endpoint request failed: {exc.__class__.__name__}") from exc
 
         try:
