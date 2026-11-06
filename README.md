@@ -31,7 +31,7 @@ This repository holds one project from the four-project Gravion Toolkit. The pro
 | Project | Purpose | Repository |
 |---|---|---|
 | localshare | Share a local development server through Cloudflare Quick or Named Tunnels | https://github.com/gravion-ux/localshare/tree/main |
-| privacyflow | Validate authorised VPN profiles and plan safe rotation workflows | https://github.com/gravion-ux/privacyflow/tree/main |
+| privacyflow | Validate authorized VPN profiles and plan safe rotation workflows | https://github.com/gravion-ux/privacyflow/tree/main |
 | agent-browser | Run permission-aware browser tasks on allow-listed domains | https://github.com/gravion-ux/agent-browser/tree/main |
 | **This repository** | Evaluate AI models against a JSONL dataset and report quality | https://github.com/gravion-ux/gravion-trainner/tree/main |
 

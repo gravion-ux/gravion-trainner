@@ -1,10 +1,12 @@
 # Test results
 
-Release: 0.4.3
-Run date: 2026-11-04
+Release: 0.1.0
+Run date: 2026-11-06
 Command: `bash scripts/test-all.sh`
 
-Verified local regression counts: Localshare 17, Agent Browser 19, demo-web 2, Privacyflow 24, Gravion Trainner 20 — **82/82 passed**. The Python profile tests now cover multiple peers, DNS search domains, WireGuard ListenPort/FwMark, invalid/unknown options, executable hook rejection, and size limits. The Localshare suite includes a fake-cloudflared process integration test. The Trainner suite includes a local HTTP mock-server plus CLI integration test covering successful evaluation/report creation, text-part arrays, HTTP errors and redirect rejection.
+Verified local regression counts: Localshare 40, Agent Browser 43, demo-web 5, Privacyflow 38, Gravion Trainner 27 — **153 tests, 152 passed, 1 skipped**. The single skip is the Localshare fake-cloudflared process integration test: it is skipped on Windows because the POSIX shebang fixture script cannot run there, and it runs in the Linux CI job. The Python profile tests cover multiple peers, DNS search domains, WireGuard ListenPort/FwMark, invalid and unknown options, executable hook rejection, and size limits. The Localshare suite includes the fake-cloudflared process integration test and the HTTP origin pre-flight checks. The Agent Browser suite now covers the command-line parser, the domain allow-list and the private-network checks. The Trainner suite includes a local HTTP mock-server plus CLI integration test covering successful evaluation and report creation, text-part arrays, HTTP errors and redirect rejection.
+
+The previous recorded run (2026-11-04) reported 82/82 passed. That figure is superseded by the counts above. The environment statements below describe the local audit container of that earlier run; they were not re-verified in this pass.
 
 The full local regression suite also includes CLI help/config validation, JavaScript syntax checks, and Python bytecode compilation. Both Python packages were built as wheels and installed in editable mode with the installed setuptools backend. Both Node packages passed `npm pack --dry-run`. Their console entry points and help paths were checked.
 

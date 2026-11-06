@@ -6,12 +6,12 @@ from pathlib import Path
 import sys
 from .evaluator import OpenAICompatibleClient, evaluate, load_dataset
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="gravion-trainner", description="Evaluate a model against a versioned JSONL dataset")
     sub = parser.add_subparsers(dest="command", required=True)
     cmd = sub.add_parser("evaluate"); cmd.add_argument("--dataset", required=True); cmd.add_argument("--output", required=True)
     cmd.add_argument("--base-url"); cmd.add_argument("--model")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     try:
         cases = load_dataset(args.dataset)
         client = OpenAICompatibleClient(base_url=args.base_url, model=args.model)

@@ -17,7 +17,7 @@
 
 ## 02 — Privacyflow
 
-**Purpose:** Manage user-authorised VPN profiles and privacy-safe endpoint rotation with predictable fail-closed behavior.
+**Purpose:** Manage user-authorized VPN profiles and privacy-safe endpoint rotation with predictable fail-closed behavior.
 
 **Current MVP:** TOML config validation, WireGuard profile checks and a rotation-plan dry run.
 
@@ -27,7 +27,7 @@
 
 ## 03 — Agent Browser
 
-**Purpose:** Permission-aware browser agent for bounded research and repetitive workflows on sites the user is authorised to access.
+**Purpose:** Permission-aware browser agent for bounded research and repetitive workflows on sites the user is authorized to access.
 
 **Current MVP:** Visible Playwright browser, exact host allow-list, URL validation, bounded navigation and page text snapshot.
 
