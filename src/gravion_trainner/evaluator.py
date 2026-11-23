@@ -133,7 +133,7 @@ class OpenAICompatibleClient:
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0,
         }).encode("utf-8")
-        headers = {"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "Gravion-Trainner/0.4.3"}
+        headers = {"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "Gravion-Trainner/0.1.0"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
         request = urllib.request.Request(
