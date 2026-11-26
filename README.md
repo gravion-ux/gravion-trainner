@@ -1,8 +1,10 @@
+<p align="center"><img src="assets/banner.svg" alt="gravion-trainner banner" width="100%"/></p>
+
 # Gravion Trainner v0.1.0
 
-[![CI](https://github.com/gravion-ux/gravion-trainner/actions/workflows/ci.yml/badge.svg)](https://github.com/gravion-ux/gravion-trainner/actions/workflows/ci.yml)
+[![CI](https://github.com/gravion-ux/gravion-trainner/actions/workflows/ci.yml/badge.svg)](https://github.com/gravion-ux/gravion-trainner/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Model quality evaluation starter for OpenAI-compatible chat-completions endpoints (including compatible local runtimes).
+**Model quality evaluation starter for OpenAI-compatible chat-completions endpoints (including compatible local runtimes).**
 
 ## Run a test
 
