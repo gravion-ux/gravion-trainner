@@ -51,16 +51,16 @@ def load_dataset(path: str | Path) -> list[EvalCase]:
         case_id, prompt = raw.get("id"), raw.get("prompt")
         if not isinstance(case_id, str) or not case_id.strip() or not isinstance(prompt, str) or not prompt.strip():
             raise ValueError(f"Line {line_number} requires non-empty string fields id and prompt")
-        if case_id in seen_ids:
+        if case_id.strip() in seen_ids:
             raise ValueError(f"Line {line_number}: duplicate case id {case_id!r}")
-        seen_ids.add(case_id)
+        seen_ids.add(case_id.strip())
         expected = raw.get("expected_contains", [])
         if not isinstance(expected, list) or not expected or any(not isinstance(item, str) or not item.strip() for item in expected):
             raise ValueError(f"Line {line_number}: expected_contains must be a non-empty list of non-empty strings")
         folded = [item.casefold() for item in expected]
         if len(set(folded)) != len(folded):
             raise ValueError(f"Line {line_number}: expected_contains must not contain duplicate phrases")
-        cases.append(EvalCase(case_id, prompt, expected))
+        cases.append(EvalCase(case_id.strip(), prompt.strip(), [item.strip() for item in expected]))
         if len(cases) > MAX_DATASET_CASES:
             raise ValueError(f"Dataset exceeds the {MAX_DATASET_CASES}-case limit")
     if not cases:
@@ -77,7 +77,7 @@ def score_output(output: str, expected_contains: list[str]) -> dict[str, Any]:
     matched = [item for item in expected_contains if item.casefold() in normalized]
     matched_folded = {item.casefold() for item in matched}
     total = len(expected_contains)
-    score = 1.0 if total == 0 else len(matched) / total
+    score = len(matched) / total
     return {
         "score": round(score, 4),
         "matched": matched,
